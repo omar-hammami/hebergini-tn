@@ -1,24 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { 
-  User, 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Calendar, 
-  Shield, 
-  Settings, 
-  Camera, 
-  Edit3, 
-  Save, 
-  X,
-  CheckCircle,
-  AlertCircle,
-  Star,
-  History,
-  Bell,
-  Lock,
-  Globe
-} from 'lucide-react';
+import { User, Mail, Phone, MapPin, Calendar, Shield, Settings, Camera, CreditCard as Edit3, Save, X, CheckCircle, AlertCircle, Star, History, Bell, Lock, Globe } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { storage } from '../../lib/firebase';
