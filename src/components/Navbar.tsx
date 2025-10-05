@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Globe, Menu, User, Shield, Leaf, Briefcase } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import AuthModal from './auth/AuthModal';
 
@@ -27,12 +28,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
             <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-green-500 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">H</span>
             </div>
             <span className="text-xl font-bold text-gray-900">Hebergini.tn</span>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
