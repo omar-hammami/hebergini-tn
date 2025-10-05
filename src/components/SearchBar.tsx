@@ -70,6 +70,8 @@ const SearchBar = () => {
               <input 
                 type="text" 
                 placeholder="Rechercher une destination" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full text-gray-900 placeholder-gray-500 focus:outline-none"
               />
             </div>
@@ -83,6 +85,10 @@ const SearchBar = () => {
               <input 
                 type="text" 
                 placeholder="Quand ?" 
+                value={checkIn}
+                onChange={(e) => setCheckIn(e.target.value)}
+                onFocus={(e) => e.target.type = 'date'}
+                onBlur={(e) => e.target.type = 'text'}
                 className="w-full text-gray-900 placeholder-gray-500 focus:outline-none"
               />
             </div>
@@ -96,6 +102,10 @@ const SearchBar = () => {
               <input 
                 type="text" 
                 placeholder="Quand ?" 
+                value={checkOut}
+                onChange={(e) => setCheckOut(e.target.value)}
+                onFocus={(e) => e.target.type = 'date'}
+                onBlur={(e) => e.target.type = 'text'}
                 className="w-full text-gray-900 placeholder-gray-500 focus:outline-none"
               />
             </div>
@@ -109,14 +119,28 @@ const SearchBar = () => {
               <input 
                 type="text" 
                 placeholder="Ajouter des voyageurs" 
+                value={guests > 1 ? `${guests} voyageurs` : '1 voyageur'}
+                readOnly
                 className="w-full text-gray-900 placeholder-gray-500 focus:outline-none"
               />
+              <select
+                value={guests}
+                onChange={(e) => setGuests(Number(e.target.value))}
+                className="absolute inset-0 opacity-0 cursor-pointer"
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
+                  <option key={num} value={num}>{num} voyageur{num > 1 ? 's' : ''}</option>
+                ))}
+              </select>
             </div>
           </div>
 
           {/* Search Button */}
           <div className="flex items-center p-4">
-            <button className="bg-gradient-to-r from-teal-500 to-green-500 text-white px-8 py-3 rounded-full hover:from-teal-600 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2">
+            <button 
+              onClick={handleSearch}
+              className="bg-gradient-to-r from-teal-500 to-green-500 text-white px-8 py-3 rounded-full hover:from-teal-600 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center space-x-2"
+            >
               <Search size={20} />
               <span className="hidden md:block">Rechercher</span>
             </button>

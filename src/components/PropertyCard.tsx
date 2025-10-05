@@ -1,20 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Star, Shield, Briefcase, Leaf, CheckCircle } from 'lucide-react';
+import { Property } from '../types/property';
 
-interface Property {
-  id: number;
-  title: string;
-  location: string;
-  price: number;
-  rating: number;
-  reviews: number;
-  images: string[];
-  isSuperhost: boolean;
-  hasWorkspace: boolean;
-  isEcoFriendly: boolean;
-  isBlockchainVerified: boolean;
-  amenities: string[];
-}
 
 interface PropertyCardProps {
   property: Property;
