@@ -1,9 +1,26 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, MapPin, Calendar, Users, Briefcase, Filter } from 'lucide-react';
 
 const SearchBar = () => {
   const [activeTab, setActiveTab] = useState('stays');
   const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [guests, setGuests] = useState(1);
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    const searchParams = new URLSearchParams();
+    if (searchQuery) searchParams.set('location', searchQuery);
+    if (checkIn) searchParams.set('checkin', checkIn);
+    if (checkOut) searchParams.set('checkout', checkOut);
+    if (guests > 1) searchParams.set('guests', guests.toString());
+    if (activeTab !== 'stays') searchParams.set('type', activeTab);
+    
+    navigate(`/search?${searchParams.toString()}`);
+  };
 
   return (
     <div className="max-w-4xl mx-auto">

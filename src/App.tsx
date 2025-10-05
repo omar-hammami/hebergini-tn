@@ -9,6 +9,7 @@ import TrustSection from './components/TrustSection';
 import WorkspaceSection from './components/WorkspaceSection';
 import SustainabilitySection from './components/SustainabilitySection';
 import Footer from './components/Footer';
+import SearchPage from './components/search/SearchPage';
 import UserProfile from './components/auth/UserProfile';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 
@@ -30,6 +31,7 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route 
               path="/profile" 
               element={
