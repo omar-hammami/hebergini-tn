@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Calendar, Users, Filter, Grid, Map, SlidersHorizontal } from 'lucide-react';
+import { Search, MapPin, Calendar, Users, Filter, Grid2x2 as Grid, Map, SlidersHorizontal } from 'lucide-react';
 import SearchFilters from './SearchFilters';
 import PropertyGrid from './PropertyGrid';
 import MapView from './MapView';
