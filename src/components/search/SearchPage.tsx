@@ -11,7 +11,10 @@ const SearchPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
-  const [guests, setGuests] = useState(1);
+  const [adults, setAdults] = useState(2);
+  const [children, setChildren] = useState(0);
+  const [infants, setInfants] = useState(0);
+  const [showGuestDropdown, setShowGuestDropdown] = useState(false);
   const [viewMode, setViewMode] = useState<'grid' | 'map'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<SortOption>('relevance');
@@ -32,6 +35,44 @@ const SearchPage: React.FC = () => {
 
   const [filteredProperties, setFilteredProperties] = useState<Property[]>(mockProperties);
   const [loading, setLoading] = useState(false);
+
+  const totalGuests = adults + children;
+
+  const incrementGuests = (type: 'adults' | 'children' | 'infants') => {
+    switch (type) {
+      case 'adults':
+        if (adults < 16) setAdults(adults + 1);
+        break;
+      case 'children':
+        if (children < 5) setChildren(children + 1);
+        break;
+      case 'infants':
+        if (infants < 5) setInfants(infants + 1);
+        break;
+    }
+  };
+
+  const decrementGuests = (type: 'adults' | 'children' | 'infants') => {
+    switch (type) {
+      case 'adults':
+        if (adults > 1) setAdults(adults - 1);
+        break;
+      case 'children':
+        if (children > 0) setChildren(children - 1);
+        break;
+      case 'infants':
+        if (infants > 0) setInfants(infants - 1);
+        break;
+    }
+  };
+
+  const getGuestText = () => {
+    const parts = [];
+    if (adults > 0) parts.push(`${adults} adulte${adults > 1 ? 's' : ''}`);
+    if (children > 0) parts.push(`${children} enfant${children > 1 ? 's' : ''}`);
+    if (infants > 0) parts.push(`${infants} bébé${infants > 1 ? 's' : ''}`);
+    return parts.join(', ') || '2 adultes';
+  };
 
   // Apply filters and search
   useEffect(() => {
@@ -161,17 +202,126 @@ const SearchPage: React.FC = () => {
               </div>
 
               {/* Guests */}
-              <div className="flex items-center space-x-2 px-3 py-2 border-l border-gray-200">
+              <div className="flex items-center space-x-2 px-3 py-2 border-l border-gray-200 relative">
                 <Users size={16} className="text-gray-400" />
-                <select
-                  value={guests}
-                  onChange={(e) => setGuests(Number(e.target.value))}
-                  className="w-full text-sm focus:outline-none"
+                <button
+                  onClick={() => setShowGuestDropdown(!showGuestDropdown)}
+                  className="w-full text-left text-sm focus:outline-none flex items-center justify-between"
                 >
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map(num => (
-                    <option key={num} value={num}>{num} voyageur{num > 1 ? 's' : ''}</option>
-                  ))}
-                </select>
+                  <span className="truncate">{getGuestText()}</span>
+                  <svg className={`w-4 h-4 transition-transform ${showGuestDropdown ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Guest Dropdown */}
+                {showGuestDropdown && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-30" 
+                      onClick={() => setShowGuestDropdown(false)}
+                    />
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-xl z-40 p-4 min-w-[280px]">
+                      <div className="space-y-4">
+                        {/* Adults */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-gray-900 text-sm">Adultes</div>
+                            <div className="text-xs text-gray-500">13 ans et plus</div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => decrementGuests('adults')}
+                              disabled={adults <= 1}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                              </svg>
+                            </button>
+                            <span className="w-6 text-center text-sm font-medium">{adults}</span>
+                            <button
+                              onClick={() => incrementGuests('adults')}
+                              disabled={adults >= 16}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Children */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-gray-900 text-sm">Enfants</div>
+                            <div className="text-xs text-gray-500">2-12 ans</div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => decrementGuests('children')}
+                              disabled={children <= 0}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                              </svg>
+                            </button>
+                            <span className="w-6 text-center text-sm font-medium">{children}</span>
+                            <button
+                              onClick={() => incrementGuests('children')}
+                              disabled={children >= 5}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Infants */}
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <div className="font-medium text-gray-900 text-sm">Bébés</div>
+                            <div className="text-xs text-gray-500">Moins de 2 ans</div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <button
+                              onClick={() => decrementGuests('infants')}
+                              disabled={infants <= 0}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                              </svg>
+                            </button>
+                            <span className="w-6 text-center text-sm font-medium">{infants}</span>
+                            <button
+                              onClick={() => incrementGuests('infants')}
+                              disabled={infants >= 5}
+                              className="w-6 h-6 rounded-full border border-gray-300 flex items-center justify-center hover:border-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-4 pt-3 border-t border-gray-200">
+                        <button
+                          onClick={() => setShowGuestDropdown(false)}
+                          className="w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition-colors text-sm"
+                        >
+                          Confirmer
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
